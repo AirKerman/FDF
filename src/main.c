@@ -6,12 +6,15 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/17 18:09:33 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/18 17:42:09 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <stdio.h>
+#include "mlx.h"
+#include "mlx_int.h"
+
 	
 int	main(int argc, char **argv)
 {
