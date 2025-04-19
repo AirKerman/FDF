@@ -15,11 +15,11 @@ all:		$(NAME)
 .PHONY:		clean
 clean:		
 			$(RM) $(OBJS)
-			make clean -C /minilibx/
+			make clean -C minilibx/
 
 .PHONY:		fclean
-fclean:
-			$(RM) $(OBJS) $(NAME)
+fclean:		clean
+			$(RM) $(NAME)
 
 
 
@@ -27,6 +27,6 @@ fclean:
 re:			fclean $(NAME)
 
 $(NAME):	$(OBJS)
+			make -C minilibx/
 			$(CC) -o $(NAME) $(OBJS) $(CFLAGS) $(MLXFLAG)
-			make -C /minilibx/
 
