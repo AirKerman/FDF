@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/23 16:04:28 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/24 00:10:06 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 	
 int	main(int argc, char **argv)
 {
-	void	*mlx;
-	void	*mlx_win;
+//	void	*mlx;
+//	void	*mlx_win;
 	int		fd;
 	char	*line;
 
@@ -36,8 +36,9 @@ int	main(int argc, char **argv)
 				line = get_next_line(fd);
 			}
 		}
+		close(fd);
 	}
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
-	mlx_loop(mlx);
+//	mlx = mlx_init();
+//	mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
+//	mlx_loop(mlx);
 }

@@ -6,7 +6,7 @@
 /*   By: rkerman <rkerman@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 15:54:30 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/23 16:31:46 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/24 00:07:01 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,23 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-void	*(size_t nmemb, size_t size)
+static void	ft_bzero(void *mem, size_t size)
+{
+	unsigned char	*ptr;
+
+	ptr = (unsigned char *)mem;
+	while (size--)
+		*ptr++ = 0;
+}
+void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*mem;
 
+	if (size && nmemb > SIZE_MAX / size)
+		return (NULL);
 	mem = malloc(nmemb * size);
+	if (!mem)
+		return (NULL);
+	ft_bzero(mem, nmemb * size);
+	return (mem);
 }

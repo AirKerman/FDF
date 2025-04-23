@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:04:02 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/23 16:09:31 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/24 00:07:33 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@
 
 #include "mlx.h"
 #include "mlx_int.h"
+#include <stdint.h>
 
 char	*get_next_line(int fd);
 int	ft_chr_c(char *s, int c);
 char	*ft_strjoin(char *s, char *b);
 int		ft_strlen(char *str);
+void	*ft_calloc(size_t nmemb, size_t size);
+
 
 #endif
