@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/24 00:10:06 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/24 01:50:57 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@ int	main(int argc, char **argv)
 			line = get_next_line(fd);
 			while (line)
 			{
+				if (!size)
+					size = countwords(line);
+				if (size != countwords(line) || !is_num(line))
+					return (0);
 				printf("%s", line);
 				free(line);
 				line = get_next_line(fd);
