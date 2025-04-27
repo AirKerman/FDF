@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/27 16:13:30 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/27 23:10:27 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	file_checker(char *path, t_val *data)
 		data->width = size;
 		while (line)
 		{
-			if (size != countwords(line) || !is_hex(line))
+			if (!size || size != countwords(line) || !is_hex(line))
 				return (free(line), 0);
 			data->height++;
 			free(line);
@@ -77,50 +77,20 @@ int	file_checker(char *path, t_val *data)
 	}
 	return (0);
 }
-/*
-void	grid_fill()
 
-void	file_processing(char *path, int **grid, t_val *data)
-{
-	int		fd;
-	char	*line;
-
-	fd = open(path, O_RDONLY);
-	line = get_next_line(fd);
-	data->width = countwords(line);
-	while (line)
-	{
-		if(grid_fill())
-		{
-			free(line);
-			line = get_next_line(fd);
-			data->size += countwords(line);
-			data->height++;
-		}
-		else
-		{
-			free_grid(grid);
-			free(line);
-			break;
-		}
-	}
-	close(fd);
-}
-*/
-
-
-int	grid_fill(char *path, int **grid, t_val *data)
+int	grid_fill(char *path, int ***grid, t_val *data)
 {
 	int	fd;
+	char	**s;
 
 	fd = open(path, O_RDONLY);
-	*grid = ft_calloc(data->size + 1, sizeof(int));
+	*grid = ft_calloc(data->size + 1, sizeof(int *));
 	if (!*grid)
 		return (0);
 	
 }
 
-int	file_processing(char *path, int **grid, t_val *data)
+int	file_processing(char *path, int ***grid, t_val *data)
 {
 	if (!file_checker(path, data) || !grid_fill(path, grid, data))
 		return (0);
@@ -136,7 +106,7 @@ void	init_data(t_val *data)
 
 int	main(int argc, char **argv)
 {
-	int	*g;
+	int	**g;
 	t_val data;
 
 	init_data(&data);
