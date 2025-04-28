@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/28 13:34:15 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:24:59 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,38 @@ int	ft_atoi(char *s)
 	return (c * n);
 }
 
+
+int	ft_hextoi(char *s, int len)
+{
+	int	c;
+
+	c = 0;
+	while (*s)
+	{
+		if (*s >= '0' && *s <= '9')
+			c = (c * len) + (*s - '0');
+		else if (*s >= 'a' && *s <= 'f')
+			c = (c * len) + (*s - 'a' + 10);
+		else if (*s >= 'A' && *s <= 'F')
+			c = (c * len) + (*s - 'A' + 10);
+		s++;
+	}
+	return (c);
+}
+
+int	c_sch(char *s, char c)
+{
+	int	i;
+
+	i = 0;
+	while (s && s[i])
+	{
+		if (s[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
 int	grid_fill(char *path, int ***grid, t_val *data)
 {
 	int		fd;
@@ -148,7 +180,11 @@ int	grid_fill(char *path, int ***grid, t_val *data)
 			(*grid)[x][0] = x;
 			(*grid)[x][1] = y;
 			(*grid)[x][2] = ft_atoi(s[x]);
-			printf("point : (x: %d, y: %d, z: %d)\n", (*grid)[x][0], (*grid)[x][1], (*grid)[x][2]);
+			if (c_sch(s[x], ',') != -1)
+				(*grid)[x][3] = ft_hextoi(&s[x][c_sch(s[x], 'x')], 16);
+			else
+				(*grid)[x][3] = COLOR;
+			printf("point : (x: %d, y: %d, z: %d, color: %d)\n", (*grid)[x][0], (*grid)[x][1], (*grid)[x][2], (*grid)[x][3]);
 			x++;
 		}
 		y++;
@@ -186,4 +222,5 @@ int	main(int argc, char **argv)
 	}
 	else
 		write(2, "Error map\n", 10);
+	
 }

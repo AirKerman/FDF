@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:04:02 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/28 12:55:13 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:47:00 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 # ifndef BUFFER_SIZE
 # define BUFFER_SIZE 42
 # endif
+
+# ifndef COLOR
+# define COLOR 0xFFFFFF
+# endif
+
 
 #include "mlx.h"
 #include "mlx_int.h"
@@ -27,6 +32,8 @@ typedef struct t_value
 	int	size;
 	int	width;
 	int	height;
+	int	w_lag;
+	int	h_lag;
 }	t_val;
 
 
