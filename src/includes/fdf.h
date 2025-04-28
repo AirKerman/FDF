@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:04:02 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/27 15:09:01 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/28 12:55:13 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ int		ft_chr_c(char *s, int c);
 char	*ft_strjoin(char *s, char *b);
 int		ft_strlen(char *str);
 void	*ft_calloc(size_t nmemb, size_t size);
-
+char	**ft_split(char const *s, char c);
 
 #endif

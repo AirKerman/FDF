@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/27 23:10:27 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/28 13:34:15 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,16 +78,84 @@ int	file_checker(char *path, t_val *data)
 	return (0);
 }
 
+void free_all(int ***g)
+{
+	int	i;
+
+	i = 0;
+	while (*g[i])
+	{
+		free((*g)[i]);
+		i++;	
+	}
+	free(*g);
+}
+
+int	ft_atoi(char *s)
+{
+	int	c;
+	int	n;
+
+	c = 0;
+	n = 1;
+	while (s && *s == ' ')
+		s++;
+	if (s && (*s == '-' || *s == '+'))
+	{
+		if (*s == '-')
+			n = -1;
+		s++;
+	}
+	while (s && (*s >= '0' && *s <= '9'))
+	{
+		c = (c * 10) + (*s - '0');
+		s++;
+	}
+	return (c * n);
+}
+
 int	grid_fill(char *path, int ***grid, t_val *data)
 {
-	int	fd;
+	int		fd;
 	char	**s;
+	char	*l;
+	int		x;
+	int		y;
 
 	fd = open(path, O_RDONLY);
 	*grid = ft_calloc(data->size + 1, sizeof(int *));
 	if (!*grid)
 		return (0);
-	
+	l = get_next_line(fd);
+	y = 0;
+	while (l)
+	{
+		x = 0;
+		s = ft_split(l, ' ');
+		if (!s)
+		{
+			free_all(grid);
+			return (0);
+		}
+		while (s[x])
+		{
+			(*grid)[x] = ft_calloc(5, sizeof(int));
+			if (!(*grid)[x])
+			{
+				free_all(grid);
+				return (0);
+			}
+			(*grid)[x][0] = x;
+			(*grid)[x][1] = y;
+			(*grid)[x][2] = ft_atoi(s[x]);
+			printf("point : (x: %d, y: %d, z: %d)\n", (*grid)[x][0], (*grid)[x][1], (*grid)[x][2]);
+			x++;
+		}
+		y++;
+		free(l);
+		l = get_next_line(fd);
+	}
+	return (1);	
 }
 
 int	file_processing(char *path, int ***grid, t_val *data)

@@ -6,11 +6,11 @@
 /*   By: rkerman <rkerman@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 13:00:20 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/27 16:13:27 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/28 13:07:45 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "fdf.h"
 
 static size_t	countword(char const *s, char sep)
 {
@@ -95,9 +95,9 @@ static int	machine_split(char **arr, const char *s, char c)
 	return (1);
 }
 
-int	*ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
-	int		*arr;
+	char	**arr;
 	size_t	word_c;
 
 	word_c = countword(s, c) + 1;
