@@ -6,7 +6,7 @@
 /*   By: rkerman <rkerman@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/29 19:37:38 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/29 23:10:31 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,13 @@ int	grid_fill(char *path, t_val *data)
 		}
 		y++;
 		free(l);
+		x = 0;
+		while (s[x])
+		{
+			free(s[x]);
+			x++;
+		}
+		free(s);
 		l = get_next_line(fd);
 	}
 	return (1);	
@@ -442,9 +449,30 @@ void	center_grid(t_val *d)
 	}
 }
 
-int	close_win(int keycode, t_val *d)
+int	close_win(t_val *d)
 {
+	int	i;
+
+	i = 0;
+	mlx_destroy_image(d->mlx, d->img);
 	mlx_destroy_window(d->mlx, d->mlx_win);
+	mlx_destroy_display(d->mlx);
+	free(d->mlx);
+	while (i < d->size)
+	{
+		free(d->grid[i]);
+		i++;
+	}
+	free(d->grid);
+	exit(0);
+	return (0);
+}
+
+int	handler_hook(int keycode, t_val *d)
+{
+	if (keycode == 65307)
+		close_win(d);
+
 	return (0);
 }
 
@@ -459,6 +487,7 @@ void	fdf(t_val *d)
 	display_fdf(d);
 	mlx_put_image_to_window(d->mlx, d->mlx_win, d->img, 0, 0);
 	mlx_hook(d->mlx_win, 17, 0, close_win, d);
+	mlx_hook(d->mlx_win, 2, 1L<<0, handler_hook, d);
 	mlx_loop(d->mlx);
 
 }
