@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/29 02:54:50 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/29 03:29:06 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,57 @@ int	grid_fill(char *path, t_val *data)
 	return (1);	
 }
 
+void	r_rotate_x(int **tab, int size_tab)
+{
+	int	i;
+	float	x;
+	float	z;
+
+	i = 0;
+	while (i < size_tab)
+	{
+		x = (tab[i][0] * cos(-ROTATESPEED)) - (tab[i][1] * sin(-ROTATESPEED));
+		z = (tab[i][0] * sin(-ROTATESPEED)) + (tab[i][1] * cos(-ROTATESPEED));
+		tab[i][0] = x;
+		tab[i][1] = z;
+		i ++;
+	}
+}
+
+void	r_rotate_y(int **tab, int size_tab)
+{
+	int	i;
+	float	x;
+	float	z;
+
+	i = 0;
+	while (i < size_tab)
+	{
+		x = (tab[i][0] * cos(-ROTATESPEED)) - (tab[i][2] * sin(-ROTATESPEED));
+		z = (tab[i][0] * sin(-ROTATESPEED)) + (tab[i][2] * cos(-ROTATESPEED));
+		tab[i][0] = x;
+		tab[i][2] = z;
+		i++;
+	}
+}
+
+void	r_rotate_z(int **tab, int size_tab)
+{
+	int	i;
+	float	x;
+	float	z;
+
+	i = 0;
+	while (i < size_tab)
+	{
+		x = (tab[i][1] * cos(-ROTATESPEED)) - (tab[i][2] * sin(-ROTATESPEED));
+		z = (tab[i][1] * sin(-ROTATESPEED)) + (tab[i][2] * cos(-ROTATESPEED));
+		tab[i][1] = x;
+		tab[i][2] = z;
+		i ++;
+	}
+}
+
 int	file_processing(char *path, t_val *data)
 {
 	if (!file_checker(path, data) || !grid_fill(path, data))
@@ -208,6 +259,8 @@ void	init_data(t_val *data)
 	data->size = 0;
 	data->width = 0;
 	data->height = 0;
+	data->w_lag = 1920 / 2;
+	data->h_lag = 1080 / 2;
 }
 
 /*
@@ -238,7 +291,46 @@ void	display_fdf(t_val *d)
 	while (i < d->size)
 	{
 		printf("%d\n", i);
-		put_p(d, d->grid[i][0], d->grid[i][1], 0xFFFFFF);
+		put_p(d, d->grid[i][0] + d->w_lag, d->grid[i][1] + d->h_lag, d->grid[i][3]);
+		i++;
+	}
+
+}
+
+void	set_fdf(t_val *d)
+{
+	int	i;
+
+	i = 0;
+	while (i < 5)
+	{
+		r_rotate_x(d->grid, d->size);
+		r_rotate_y(d->grid, d->size);
+		r_rotate_z(d->grid, d->size);
+		i++;
+	}
+}
+void	print_grid(t_val *d)
+{
+	int	i;
+
+	i = 0;
+	while (i < d->size)
+	{
+		printf("point numero %d x: %d, y: %d, z: %d\n", i, d->grid[i][0], d->grid[i][1], d->grid[i][2]);
+		i++;
+	}
+}
+
+void	center_grid(t_val *d)
+{
+	int	i;
+
+	i = 0;
+	while (i < d->size)
+	{
+		d->grid[i][0] -= d->width * MULTI / 2;
+		d->grid[i][1] -= d->height * MULTI / 2;
 		i++;
 	}
 }
@@ -250,9 +342,13 @@ void	fdf(t_val *d)
 	(void)d;
 
 	mlx = mlx_init();
+	center_grid(d);
 	mlx_win = mlx_new_window(mlx, 1920, 1080, "Fil 2 Fer");
 	d->img = mlx_new_image(mlx, 1920, 1080);
 	d->addr = mlx_get_data_addr(d->img, &d->bpp, &d->lw, &d->endian);
+	print_grid(d);
+	set_fdf(d);
+	print_grid(d);
 	display_fdf(d);
 	mlx_put_image_to_window(mlx, mlx_win, d->img, 0, 0);
 	mlx_loop(mlx);

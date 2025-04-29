@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:04:02 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/29 02:57:48 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/29 03:10:18 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@
 # ifndef MULTI
 # define MULTI 50
 # endif
-
+# ifndef ROTATESPEED
+# define ROTATESPEED 0.05f
+# endif
 
 #include "mlx.h"
 #include "mlx_int.h"
