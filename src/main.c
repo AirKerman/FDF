@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/28 15:24:59 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/29 02:54:50 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,17 +78,17 @@ int	file_checker(char *path, t_val *data)
 	return (0);
 }
 
-void free_all(int ***g)
+void free_all(int **g)
 {
 	int	i;
 
 	i = 0;
-	while (*g[i])
+	while (g[i])
 	{
-		free((*g)[i]);
+		free(g[i]);
 		i++;	
 	}
-	free(*g);
+	free(g);
 }
 
 int	ft_atoi(char *s)
@@ -146,46 +146,48 @@ int	c_sch(char *s, char c)
 	}
 	return (-1);
 }
-int	grid_fill(char *path, int ***grid, t_val *data)
+int	grid_fill(char *path, t_val *data)
 {
 	int		fd;
 	char	**s;
 	char	*l;
 	int		x;
 	int		y;
+	int		i;
 
 	fd = open(path, O_RDONLY);
-	*grid = ft_calloc(data->size + 1, sizeof(int *));
-	if (!*grid)
+	data->grid = ft_calloc(data->size + 5, sizeof(int *));
+	if (!data->grid)
 		return (0);
 	l = get_next_line(fd);
 	y = 0;
+	i = 0;
 	while (l)
 	{
 		x = 0;
 		s = ft_split(l, ' ');
 		if (!s)
 		{
-			free_all(grid);
+			free_all(data->grid);
 			return (0);
 		}
 		while (s[x])
 		{
-			(*grid)[x] = ft_calloc(5, sizeof(int));
-			if (!(*grid)[x])
+			data->grid[i] = ft_calloc(5, sizeof(int));
+			if (!data->grid[i])
 			{
-				free_all(grid);
+				free_all(data->grid);
 				return (0);
 			}
-			(*grid)[x][0] = x;
-			(*grid)[x][1] = y;
-			(*grid)[x][2] = ft_atoi(s[x]);
+			data->grid[i][0] = x * MULTI;
+			data->grid[i][1] = y * MULTI;
+			data->grid[i][2] = ft_atoi(s[x]) * MULTI;
 			if (c_sch(s[x], ',') != -1)
-				(*grid)[x][3] = ft_hextoi(&s[x][c_sch(s[x], 'x')], 16);
+				data->grid[i][3] = ft_hextoi(&s[x][c_sch(s[x], 'x')], 16);
 			else
-				(*grid)[x][3] = COLOR;
-			printf("point : (x: %d, y: %d, z: %d, color: %d)\n", (*grid)[x][0], (*grid)[x][1], (*grid)[x][2], (*grid)[x][3]);
+				data->grid[i][3] = COLOR;
 			x++;
+			i++;
 		}
 		y++;
 		free(l);
@@ -194,9 +196,9 @@ int	grid_fill(char *path, int ***grid, t_val *data)
 	return (1);	
 }
 
-int	file_processing(char *path, int ***grid, t_val *data)
+int	file_processing(char *path, t_val *data)
 {
-	if (!file_checker(path, data) || !grid_fill(path, grid, data))
+	if (!file_checker(path, data) || !grid_fill(path, data))
 		return (0);
 	return (1);
 }
@@ -208,18 +210,62 @@ void	init_data(t_val *data)
 	data->height = 0;
 }
 
+/*
+void	bresenham()
+{
+	int	d;
+
+	d = y + y - x;
+
+}
+*/
+void	put_p(t_val *data, int x, int y, int c)
+{
+	char	*dst;
+
+	if (x >= 0 && x <= 1920 && y >= 0 && y <= 1920)
+	{
+		dst = data->addr + (y * data->lw + x * (data->bpp / 8));
+		*(unsigned int*)dst = c;
+	}
+}
+
+void	display_fdf(t_val *d)
+{
+	int	i;
+
+	i = 0;
+	while (i < d->size)
+	{
+		printf("%d\n", i);
+		put_p(d, d->grid[i][0], d->grid[i][1], 0xFFFFFF);
+		i++;
+	}
+}
+
+void	fdf(t_val *d)
+{
+	void	*mlx;
+	void	*mlx_win;
+	(void)d;
+
+	mlx = mlx_init();
+	mlx_win = mlx_new_window(mlx, 1920, 1080, "Fil 2 Fer");
+	d->img = mlx_new_image(mlx, 1920, 1080);
+	d->addr = mlx_get_data_addr(d->img, &d->bpp, &d->lw, &d->endian);
+	display_fdf(d);
+	mlx_put_image_to_window(mlx, mlx_win, d->img, 0, 0);
+	mlx_loop(mlx);
+
+}
+
 int	main(int argc, char **argv)
 {
-	int	**g;
 	t_val data;
 
 	init_data(&data);
-	if ((argc - 1) == 1 && file_processing(argv[1], &g, &data))
-	{
-		printf("nombre d'element dans une ligne : %d\n", data.width);
-		printf("hauteur de la grille : %d\n", data.height);
-		printf("taille complete d'element : %d\n", data.size);
-	}
+	if ((argc - 1) == 1 && file_processing(argv[1], &data))
+		fdf(&data);
 	else
 		write(2, "Error map\n", 10);
 	

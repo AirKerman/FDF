@@ -5,7 +5,7 @@ OBJS	=	$(SRCS:.c=.o)
 CC		=	cc
 NAME	=	fdf
 CFLAGS	=	-I includes -I minilibx -g
-MLXFLAG	=	-L minilibx -lmlx -lmlx_Linux -lX11 -lXext
+MLXFLAG	=	-L minilibx -lm -lmlx -lmlx_Linux -lX11 -lXext
 
 rm		=	rm -f
 

@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:04:02 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/28 14:47:00 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/29 02:57:48 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,31 @@
 # ifndef COLOR
 # define COLOR 0xFFFFFF
 # endif
+# ifndef MULTI
+# define MULTI 50
+# endif
 
 
 #include "mlx.h"
 #include "mlx_int.h"
 #include <stdint.h>
 #include <fcntl.h>
+#include <math.h>
 
 typedef struct t_value
 {
-	int	size;
+	int	**grid;
+	void	*img;
+	char	*addr;
+	int	lw;
+	int	bpp;
+	int	endian;
 	int	width;
 	int	height;
+	int	size;
 	int	w_lag;
 	int	h_lag;
+
 }	t_val;
 
 
