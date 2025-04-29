@@ -6,7 +6,7 @@
 /*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:04:02 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/29 03:10:18 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/29 19:28:09 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,21 @@
 # define COLOR 0xFFFFFF
 # endif
 # ifndef MULTI
-# define MULTI 50
+# define MULTI 100
+# endif
+# ifndef Z_MULTI
+# define Z_MULTI 40
 # endif
 # ifndef ROTATESPEED
 # define ROTATESPEED 0.05f
 # endif
+# ifndef SIZE_W
+# define SIZE_W 1920
+# endif
+# ifndef SIZE_H
+# define SIZE_H 1080
+# endif
+
 
 #include "mlx.h"
 #include "mlx_int.h"
@@ -46,9 +56,21 @@ typedef struct t_value
 	int	size;
 	int	w_lag;
 	int	h_lag;
-
+	int	multi;
+	void	*mlx;
+	void	*mlx_win;
 }	t_val;
 
+typedef	struct	t_bresenham
+{
+	int	dx;
+	int	dy;
+	int	sx;
+	int	sy;
+	int	err;
+	int	e2;
+	
+}	t_bre;
 
 char	*get_next_line(int fd);
 int		ft_chr_c(char *s, int c);

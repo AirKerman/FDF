@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkerman <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: rkerman <rkerman@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:03:47 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/29 03:29:06 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/29 19:37:38 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@ int	countwords(char *str)
 		str++;
 	}
 	return (c);
+}
+
+void    put_p(t_val *data, int x, int y, int c)
+{
+    char    *dst;
+
+    if (x >= 0 && x <= SIZE_W && y >= 0 && y <= SIZE_H)
+    {
+        dst = data->addr + (y * data->lw + x * (data->bpp / 8));
+        *(unsigned int*)dst = c;
+    }
 }
 
 int	is_hex(char *s)
@@ -181,7 +192,7 @@ int	grid_fill(char *path, t_val *data)
 			}
 			data->grid[i][0] = x * MULTI;
 			data->grid[i][1] = y * MULTI;
-			data->grid[i][2] = ft_atoi(s[x]) * MULTI;
+			data->grid[i][2] = ft_atoi(s[x]) * Z_MULTI;
 			if (c_sch(s[x], ',') != -1)
 				data->grid[i][3] = ft_hextoi(&s[x][c_sch(s[x], 'x')], 16);
 			else
@@ -194,6 +205,23 @@ int	grid_fill(char *path, t_val *data)
 		l = get_next_line(fd);
 	}
 	return (1);	
+}
+
+void    rotate_x(int **tab, int size_tab)
+{
+    int i;  
+    float   x;
+    float   z;
+
+    i = 0;
+    while (i < size_tab)
+    {
+        x = (tab[i][0] * cos(ROTATESPEED)) - (tab[i][1] * sin(ROTATESPEED));
+        z = (tab[i][0] * sin(ROTATESPEED)) + (tab[i][1] * cos(ROTATESPEED));
+        tab[i][0] = x;
+        tab[i][1] = z;
+        i ++;
+    }
 }
 
 void	r_rotate_x(int **tab, int size_tab)
@@ -211,6 +239,45 @@ void	r_rotate_x(int **tab, int size_tab)
 		tab[i][1] = z;
 		i ++;
 	}
+}
+
+int	ft_abs(int n)
+{
+	if (n < 0)
+		return (n * -1);
+	return (n);
+}
+
+void bresenham(t_val *d, int *p1, int *p2)
+{
+    t_bre box;
+    int x = p1[0];
+    int y = p1[1];
+    int color = p1[3];
+
+    box.dx = p2[0] - x;
+    box.dy = p2[1] - y;
+    box.sx = (box.dx >= 0) ? 1 : -1;
+    box.sy = (box.dy >= 0) ? 1 : -1;
+    box.dx = (box.dx >= 0) ? box.dx : -box.dx;
+    box.dy = (box.dy >= 0) ? box.dy : -box.dy;
+    box.err = (box.dx > box.dy ? box.dx : -box.dy) / 2;
+
+    while (1)
+    {
+        put_p(d, x + d->w_lag, y + d->h_lag, color);
+        if (x == p2[0] && y == p2[1])
+            break;
+        box.e2 = box.err;
+        if (box.e2 > -box.dx) {
+            box.err -= box.dy;
+            x += box.sx;
+        }
+        if (box.e2 < box.dy) {
+            box.err += box.dx;
+            y += box.sy;
+        }
+    }
 }
 
 void	r_rotate_y(int **tab, int size_tab)
@@ -247,6 +314,41 @@ void	r_rotate_z(int **tab, int size_tab)
 	}
 }
 
+void    rotate_y(int **tab, int size_tab)
+{
+    int i;
+    float   x;
+    float   z;
+
+    i = 0;
+    while (i < size_tab)
+    {
+        x = (tab[i][0] * cos(ROTATESPEED)) - (tab[i][2] * sin(ROTATESPEED));
+        z = (tab[i][0] * sin(ROTATESPEED)) + (tab[i][2] * cos(ROTATESPEED));
+        tab[i][0] = x;
+        tab[i][2] = z;
+        i++;
+    }
+}
+
+void    rotate_z(int **tab, int size_tab)
+{
+    int i;
+    float   x;
+    float   z;
+
+    i = 0;
+    while (i < size_tab)
+    {
+        x = (tab[i][1] * cos(ROTATESPEED)) - (tab[i][2] * sin(ROTATESPEED));
+        z = (tab[i][1] * sin(ROTATESPEED)) + (tab[i][2] * cos(ROTATESPEED));
+        tab[i][1] = x;
+        tab[i][2] = z;
+        i ++;
+    }
+}
+
+
 int	file_processing(char *path, t_val *data)
 {
 	if (!file_checker(path, data) || !grid_fill(path, data))
@@ -259,28 +361,9 @@ void	init_data(t_val *data)
 	data->size = 0;
 	data->width = 0;
 	data->height = 0;
-	data->w_lag = 1920 / 2;
-	data->h_lag = 1080 / 2;
-}
-
-/*
-void	bresenham()
-{
-	int	d;
-
-	d = y + y - x;
-
-}
-*/
-void	put_p(t_val *data, int x, int y, int c)
-{
-	char	*dst;
-
-	if (x >= 0 && x <= 1920 && y >= 0 && y <= 1920)
-	{
-		dst = data->addr + (y * data->lw + x * (data->bpp / 8));
-		*(unsigned int*)dst = c;
-	}
+	data->w_lag = SIZE_W / 2;
+	data->h_lag = SIZE_H / 2;
+	data->multi = 2;
 }
 
 void	display_fdf(t_val *d)
@@ -288,13 +371,32 @@ void	display_fdf(t_val *d)
 	int	i;
 
 	i = 0;
-	while (i < d->size)
+	while (i < d->size - 1)
 	{
-		printf("%d\n", i);
-		put_p(d, d->grid[i][0] + d->w_lag, d->grid[i][1] + d->h_lag, d->grid[i][3]);
+		if ((i + 1) % d->width != 0)
+			bresenham(d, d->grid[i], d->grid[i + 1]);
 		i++;
 	}
+	i = 0;
+	while (i < d->size - d->width)
+	{
+		bresenham(d, d->grid[i], d->grid[i + d->width]);
+		i ++;
+	}
+}
 
+void	mult_tab(t_val *d)
+{
+	int	i;
+
+	i = 0;
+	while (i < d->size)
+	{
+		d->grid[i][0] *= 0.9;
+		d->grid[i][1] *= 0.9;
+		d->grid[i][2] *= 0.9;
+		i++;
+	}
 }
 
 void	set_fdf(t_val *d)
@@ -302,12 +404,17 @@ void	set_fdf(t_val *d)
 	int	i;
 
 	i = 0;
-	while (i < 5)
+	while (i < 7)
 	{
-		r_rotate_x(d->grid, d->size);
-		r_rotate_y(d->grid, d->size);
-		r_rotate_z(d->grid, d->size);
+	//	r_rotate_x(d->grid, d->size);
+		rotate_y(d->grid, d->size);
+		rotate_z(d->grid, d->size);
 		i++;
+	}
+	i = 0;
+	while (d->grid[0][0] + d->w_lag < 500)
+	{
+		mult_tab(d);
 	}
 }
 void	print_grid(t_val *d)
@@ -335,23 +442,24 @@ void	center_grid(t_val *d)
 	}
 }
 
+int	close_win(int keycode, t_val *d)
+{
+	mlx_destroy_window(d->mlx, d->mlx_win);
+	return (0);
+}
+
 void	fdf(t_val *d)
 {
-	void	*mlx;
-	void	*mlx_win;
-	(void)d;
-
-	mlx = mlx_init();
+	d->mlx = mlx_init();
 	center_grid(d);
-	mlx_win = mlx_new_window(mlx, 1920, 1080, "Fil 2 Fer");
-	d->img = mlx_new_image(mlx, 1920, 1080);
+	d->mlx_win = mlx_new_window(d->mlx, SIZE_W, SIZE_H, "Fil 2 Fer");
+	d->img = mlx_new_image(d->mlx, SIZE_W, SIZE_H);
 	d->addr = mlx_get_data_addr(d->img, &d->bpp, &d->lw, &d->endian);
-	print_grid(d);
 	set_fdf(d);
-	print_grid(d);
 	display_fdf(d);
-	mlx_put_image_to_window(mlx, mlx_win, d->img, 0, 0);
-	mlx_loop(mlx);
+	mlx_put_image_to_window(d->mlx, d->mlx_win, d->img, 0, 0);
+	mlx_hook(d->mlx_win, 17, 0, close_win, d);
+	mlx_loop(d->mlx);
 
 }
 
@@ -364,5 +472,4 @@ int	main(int argc, char **argv)
 		fdf(&data);
 	else
 		write(2, "Error map\n", 10);
-	
 }
