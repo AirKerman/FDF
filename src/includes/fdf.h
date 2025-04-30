@@ -6,62 +6,61 @@
 /*   By: rkerman <rkerman@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 19:04:02 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/30 12:45:56 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/30 12:55:44 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	FDF
-#define	FDF
+#ifndef FDF_H
+# define FDF_H
 
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42
+#  define BUFFER_SIZE 42
 # endif
 
 # ifndef COLOR
-# define COLOR 0xFFFFFF
+#  define COLOR 0xFFFFFF
 # endif
 # ifndef MULTI
-# define MULTI 100
+#  define MULTI 100
 # endif
 # ifndef Z_MULTI
-# define Z_MULTI 40
+#  define Z_MULTI 40
 # endif
 # ifndef ROTATESPEED
-# define ROTATESPEED 0.05f
+#  define ROTATESPEED 0.05f
 # endif
 # ifndef SIZE_W
-# define SIZE_W 1920
+#  define SIZE_W 1920
 # endif
 # ifndef SIZE_H
-# define SIZE_H 1080
+#  define SIZE_H 1080
 # endif
 
-
-#include "mlx.h"
-#include "mlx_int.h"
-#include <stdint.h>
-#include <fcntl.h>
-#include <math.h>
+# include "mlx.h"
+# include "mlx_int.h"
+# include <stdint.h>
+# include <fcntl.h>
+# include <math.h>
 
 typedef struct t_value
 {
-	int	**grid;
+	int		**grid;
 	void	*img;
 	char	*addr;
-	int	lw;
-	int	bpp;
-	int	endian;
-	int	width;
-	int	height;
-	int	size;
-	int	w_lag;
-	int	h_lag;
-	int	multi;
+	int		lw;
+	int		bpp;
+	int		endian;
+	int		width;
+	int		height;
+	int		size;
+	int		w_lag;
+	int		h_lag;
+	int		multi;
 	void	*mlx;
 	void	*mlx_win;
 }	t_val;
 
-typedef	struct	t_bresenham
+typedef struct t_bresenham
 {
 	int	dx;
 	int	dy;
@@ -73,7 +72,7 @@ typedef	struct	t_bresenham
 	int	y;
 }	t_bre;
 
-typedef	struct	t_filling
+typedef struct t_filling
 {
 	int		fd;
 	char	**s;
