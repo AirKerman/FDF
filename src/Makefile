@@ -1,4 +1,6 @@
-SRCS	=	 main.c utils/get_next_line.c utils/gnl_utils.c utils/ft_split.c
+SRCS	=	main.c utils/get_next_line.c utils/gnl_utils.c utils/ft_split.c \
+			utils/utils_fdf_a.c matrice/matrice.c matrice/matrice_r.c \
+			handler_hook/handling.c parsing/parser.c parsing/parser_bis.c
 
 OBJS	=	$(SRCS:.c=.o)
 

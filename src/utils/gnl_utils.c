@@ -6,7 +6,7 @@
 /*   By: rkerman <rkerman@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 15:54:30 by rkerman           #+#    #+#             */
-/*   Updated: 2025/04/24 00:07:01 by rkerman          ###   ########.fr       */
+/*   Updated: 2025/04/30 12:41:07 by rkerman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static void	ft_bzero(void *mem, size_t size)
 	while (size--)
 		*ptr++ = 0;
 }
+
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*mem;
